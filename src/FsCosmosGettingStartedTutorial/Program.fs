@@ -1,13 +1,12 @@
 ﻿open System
-open System.Collections.Generic
 open System.Net
 open Microsoft.Azure.Cosmos
 open Model
 
 /// The Azure Cosmos DB endpoint for running this sample.
-let endpointUri = "https://PUT-YOUR-COSMOS-DB-ACCOUNT-HERE/";
+let endpointUri = "https://PUT-YOUR-COSMOS-DB-ACCOUNT-HERE/"
 /// The primary key for the Azure Cosmos account.
-let primaryKey = "PUT-YOUR-AZURE-COSMOS-DB-ACCOUNT-PRIMARY-KEY-HERE";
+let primaryKey = "PUT-YOUR-AZURE-COSMOS-DB-ACCOUNT-PRIMARY-KEY-HERE"
 
 // The name of the database and container we will create.
 let databaseId = "FamilyDatabase"
@@ -54,7 +53,7 @@ let addItemsToContainerAsync (container: Container) =
         try
             // Read the item to see if it exists.  
             let! andersenFamilyResponse = 
-                container.ReadItemAsync (andersenFamily.Id, PartitionKey(andersenFamily.LastName)) |> Async.AwaitTask
+                container.ReadItemAsync (andersenFamily.Id, PartitionKey (andersenFamily.LastName)) |> Async.AwaitTask
             printfn "Item in database with id: %s already exists\n" andersenFamilyResponse.Resource.Id
         with
         | :? AggregateException as ex ->
@@ -62,7 +61,7 @@ let addItemsToContainerAsync (container: Container) =
             | :? CosmosException as exInner when exInner.StatusCode = HttpStatusCode.NotFound ->
                 // Create an item in the container representing the Andersen family. Note we provide the value of the partition key for this item, which is "Andersen"
                 let! andersenFamilyResponse = 
-                    container.CreateItemAsync (andersenFamily, Nullable(PartitionKey(andersenFamily.LastName))) |> Async.AwaitTask
+                    container.CreateItemAsync (andersenFamily, Nullable (PartitionKey (andersenFamily.LastName))) |> Async.AwaitTask
                 
                 // Note that after creating the item, we can access the body of the item with the Resource property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
                 printfn "Created item in database with id: %s Operation consumed %f RUs.\n" andersenFamilyResponse.Resource.Id andersenFamilyResponse.RequestCharge
@@ -93,7 +92,7 @@ let addItemsToContainerAsync (container: Container) =
         try
             // Read the item to see if it exists
             let! wakefieldFamilyResponse = 
-                container.ReadItemAsync (wakefieldFamily.Id, PartitionKey(wakefieldFamily.LastName)) |> Async.AwaitTask
+                container.ReadItemAsync (wakefieldFamily.Id, PartitionKey (wakefieldFamily.LastName)) |> Async.AwaitTask
             printfn "Item in database with id: %s already exists\n" wakefieldFamilyResponse.Resource.Id
         with
         | :? AggregateException as ex ->
@@ -101,7 +100,7 @@ let addItemsToContainerAsync (container: Container) =
             | :? CosmosException as exInner when exInner.StatusCode = HttpStatusCode.NotFound ->
                 // Create an item in the container representing the Wakefield family. Note we provide the value of the partition key for this item, which is "Wakefield"
                 let! wakefieldFamilyResponse = 
-                    container.CreateItemAsync (wakefieldFamily, Nullable(PartitionKey(wakefieldFamily.LastName))) |> Async.AwaitTask
+                    container.CreateItemAsync (wakefieldFamily, Nullable( PartitionKey (wakefieldFamily.LastName))) |> Async.AwaitTask
 
                 // Note that after creating the item, we can access the body of the item with the Resource property off the ItemResponse. We can also access the RequestCharge property to see the amount of RUs consumed on this request.
                 printfn "Created item in database with id: %s Operation consumed %f RUs.\n" wakefieldFamilyResponse.Resource.Id wakefieldFamilyResponse.RequestCharge
@@ -116,13 +115,14 @@ let queryItemsAsync (container: Container) =
 
         printfn "Running query: %s\n" sqlQueryText
 
-        let queryDefinition = QueryDefinition(sqlQueryText)
+        let queryDefinition = QueryDefinition (sqlQueryText)
         use queryResultSetIterator = container.GetItemQueryIterator queryDefinition
 
-        let families = List<Family> ()
+        let families = ResizeArray<Family> ()
 
         while queryResultSetIterator.HasMoreResults do
             let! currentResultSet = queryResultSetIterator.ReadNextAsync () |> Async.AwaitTask
+
             for family in currentResultSet do
                 families.Add family
                 printfn "\tRead %O\n" family
@@ -131,7 +131,7 @@ let queryItemsAsync (container: Container) =
 /// Replace an item in the container.
 let replaceFamilyItemAsync (container: Container) =
     async {
-        let! wakefieldFamilyResponse = container.ReadItemAsync ("Wakefield.7", PartitionKey("Wakefield")) |> Async.AwaitTask
+        let! wakefieldFamilyResponse = container.ReadItemAsync ("Wakefield.7", PartitionKey ("Wakefield")) |> Async.AwaitTask
         let itemBody = wakefieldFamilyResponse.Resource
 
         // update registration status from false to true
@@ -141,7 +141,7 @@ let replaceFamilyItemAsync (container: Container) =
 
         // replace the item with the updated content
         let! wakefieldFamilyResponse = 
-            container.ReplaceItemAsync (newItemBody, itemBody.Id, Nullable(PartitionKey(itemBody.LastName))) |> Async.AwaitTask
+            container.ReplaceItemAsync (newItemBody, itemBody.Id, Nullable (PartitionKey (itemBody.LastName))) |> Async.AwaitTask
         printfn "Updated Family [%s,%s].\n \tBody is now: %O\n" newItemBody.LastName newItemBody.Id wakefieldFamilyResponse.Resource
     }
 
@@ -152,7 +152,7 @@ let deleteFamilyItemAsync (container: Container) =
         let familyId = "Wakefield.7"
 
         // Delete an item. Note we must provide the partition key value and id of the item to delete
-        let! _ = container.DeleteItemAsync (familyId, PartitionKey(partitionKeyValue)) |> Async.AwaitTask
+        let! _ = container.DeleteItemAsync (familyId, PartitionKey (partitionKeyValue)) |> Async.AwaitTask
         printfn "Deleted Family [%s,%s]\n" partitionKeyValue familyId
     }
 
@@ -160,12 +160,12 @@ let deleteFamilyItemAsync (container: Container) =
 let deleteDatabaseAndCleanupAsync (cosmosClient: CosmosClient) (database: Database) =
     async {
         let! _ = database.DeleteAsync () |> Async.AwaitTask
-        // Also valid: cosmosClient.GetDatabase("FamilyDatabase").DeleteAsync()
+        // Also valid: cosmosClient.GetDatabase("FamilyDatabase").DeleteAsync ()
 
         printfn "Deleted Database: %s\n" databaseId
 
         //Dispose of CosmosClient
-        cosmosClient.Dispose()
+        cosmosClient.Dispose ()
     }
 
 ///Entry point to call methods that operate on Azure Cosmos DB resources in this sample
@@ -183,16 +183,18 @@ let getStartedDemoAsync () =
         do! deleteDatabaseAndCleanupAsync cosmosClient database
     }
 
-[<EntryPoint>]
+[< EntryPoint >]
 let main _ =
     try
         try
             printfn "Beginning operations...\n"
-            async { do! getStartedDemoAsync () } |> Async.RunSynchronously
+            getStartedDemoAsync () |> Async.RunSynchronously
         with
         | :? CosmosException as de ->
-            let baseException = de.GetBaseException ()
+            // let baseException = de.GetBaseException ()
             printfn "%O error ocurred: %O" de.StatusCode de
+        | e ->
+            printfn "Error: %O" e
     finally
         printfn "End of demo, press any key to exit."
         Console.ReadKey () |> ignore

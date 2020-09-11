@@ -1,38 +1,14 @@
----
-languages:
-- fsharp
-products:
-- azure
-- azure-cosmos-db
-- dotnetcore
-page_type: sample
-description: "This sample shows you how to use the Azure Cosmos DB service to store and access data from an F# .NET Core console application."
----
+# Cosmos DB SQL API samples with F# and .NET Core 3.1
 
-# Developing an F# .NET Core console app using Azure Cosmos DB
-This sample shows you how to use the Azure Cosmos DB service to store and access data from an F# .NET Core console application.
+The purpose of this repository is to offer F# implementations of several samples illustrating how to use the Cosmos DB SQL API for .NET Core, originally written in C#. While I tried to use functional idioms where adequate, I followed the general structure of the original C# examples, so that you can see how C# code maps to F# code. So far, I have got:
 
-For a complete end-to-end walkthrough of creating this application (in C#), please refer to the [full tutorial on the Azure Cosmos DB documentation page](https://aka.ms/CosmosDotnetGetStarted).
+* The **Get Started tutorial**, in the src/FsCosmosGettingStartedTutorial folder, a whirlwind tour showing how to do CRUD operations in a Cosmos DB container with its SQL API.
+  * You must edit the Program.fs file and put there the end point URL of your Cosmos DB account in the ``endPointUri`` variable and the corresponding authorization key in the ``primaryKey`` variable
+  * After saving the Program.fs file you just have have to type ``dotnet run`` and press the ``Enter`` key while inside the folder
+  * The detailed original example in C# is [here](https://aka.ms/CosmosDotnetGetStarted).
+* The **Queries sample**, in the src/FsQueries folder, showing several ways of doing SQL-like query operations on a Cosmos DB container.
+  * You must edit the appSettings.json file and put there the end point URL of your Cosmos DB account and the corresponding authorization key
+  * After saving the appSettings.json file you just have have to type ``dotnet run`` and press the ``Enter`` key while inside the folder
+  * The original example in C# is [here](https://github.com/Azure/azure-cosmos-dotnet-v3/tree/master/Microsoft.Azure.Cosmos.Samples/Usage/Queries).
 
-## Running this sample
-
-1. For running this sample, you must have the following prerequisites:
-	- An active Azure Cosmos DB account - If you don't have an account, refer to the [Create a database account](https://docs.microsoft.com/azure/cosmos-db/create-sql-api-dotnet#create-a-database-account) article.
-	- .NET Core 3.1 or higher and Visual Studio Code installed.
-
-1. Clone this repository using Git for Windows (http://www.git-scm.com/), or download the zip file.
-
-1. Go to the **src/FsCosmosGettingStartedTutorial folder** and open it with Code
-2. Update the `Program.fs` file with the URI and key of your Cosmos DB account
-   1. Retrieve the URI and PRIMARY KEY (or SECONDARY KEY) values from the Keys blade of your Azure Cosmos DB account in the Azure portal. For more information on obtaining endpoint & keys for your Azure Cosmos DB account refer to [View, copy, and regenerate access keys and passwords](https://docs.microsoft.com/en-us/azure/cosmos-db/manage-account#keys)
-   2. Replace these values in the `endpointUri` and `primaryKey` definitions
-3. Save the file, open a terminal window, and enter `dotnet run` 
-
-## About the code
-The code included in this sample is intended to get you quickly started with an F# .NET Core console application that connects to Azure Cosmos DB, the code strives to be a vis-a-vis implementation of the C# original version.
-
-## More information
-
-- [Azure Cosmos DB Documentation](https://docs.microsoft.com/azure/cosmos-db/index)
-- [Azure Cosmos DB .NET SDK for SQL API](https://docs.microsoft.com/azure/cosmos-db/sql-api-sdk-dotnet)
-- [Azure Cosmos DB .NET SDK Reference Documentation](https://docs.microsoft.com/dotnet/api/overview/azure/cosmosdb?view=azure-dotnet)
+Comments and suggestions welcomed!
